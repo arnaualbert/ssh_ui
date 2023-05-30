@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SSH Folder Viewer</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $("#search").on("input", function() {
+                var value = $(this).val().toLowerCase();
+                $(".folder-item").filter(function() {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+ <br><br>
+        <form method="POST">
+            <div class="form-group">
+                <label for="file">Select a file:</label>
+                <select name="file" id="file" class="form-control">
+                    <option value="">-- Select a file --</option>
+                    {% for folder in folders %}
+                        {% if not folder.startswith('d') %}
+                            <option value="{{ folder.split()[8] }}">{{ folder.split()[8] }}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+            </div>
+            <input type="submit" value="Submit" class="btn btn-primary">
+        </form>
+
+        <br><br>
+        <h1>Folders:</h1>
+        <p>Current path: {{ path }}</p>
+
+        <input type="text" id="search" class="form-control" placeholder="Search by filename">
+
+        <ul class="list-group">
+            {% for folder in folders %}
+                <li class="list-group-item folder-item">
+                    {% if folder.startswith('d') %}
+                        <a href="{{ url_for('index', path=path+'/'+folder.split()[8]) }}">{{ folder.split()[8] }}</a>
+                    {% else %}
+                        {{ folder.split()[8] }}
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+        <br>
+        <br>
+        <br>
+    </div>
+</body>
+</html>
