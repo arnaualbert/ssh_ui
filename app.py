@@ -43,6 +43,17 @@ def index():
                 file_path = file_path[1:]  # Remove duplicate slash
             return f"Selected file path: {file_path}"
 
+
+        button_clicked = request.form.get('get_files_button')
+        if button_clicked:
+            file_paths = []
+            for folder in folder_list:
+                if not folder.startswith('d'):  # Check if it's a file
+                    folder_items = folder.split()
+                    if len(folder_items) >= 9:
+                        file_paths.append(path + '/' + folder_items[8])
+            if len(file_paths) > 1:
+                return "<br>".join(file_paths)  # Return the file paths with line breaks
     return render_template('index.html', path=path, folders=folder_list)
 
 if __name__ == '__main__':
